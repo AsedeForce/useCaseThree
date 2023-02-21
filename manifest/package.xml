@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>EventBookingTest</members>
+        <members>ExternalSystemService</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>CaseBeforeInsertTrigger</members>
+        <members>CaseBeforeUpdateTrigger</members>
+        <name>ApexTrigger</name>
+    </types>
+    <version>56.0</version>
+</Package>
