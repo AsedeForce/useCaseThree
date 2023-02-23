@@ -40,9 +40,9 @@ public with sharing class ContactSelector extends fflib_SObjectSelector{
             Set<Id> accountIds
     ) {
         String query = String.format(
-                'SELECT AccountId, COUNT(Id) numberOfContacts FROM {1} ' +
+                'SELECT AccountId, COUNT(Id) numberOfContacts FROM {0} ' +
                         'WHERE AccountId IN :accountIds GROUP BY AccountId',
-                new List<String>{ getFieldListString(), getSObjectName() }
+                new List<String>{ getSObjectName() }
         );
         return (List<AggregateResult>) Database.query(query);
     }
