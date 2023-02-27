@@ -1,14 +1,14 @@
 public with sharing class ExternalSystemService {
 
-    private final String webServiceURL;
     private final AccountSelector accountSelector;
     private final ContactSelector contactSelector;
+    private final ExternalSystemCalloutService externalSystemCalloutService;
 
 
     public ExternalSystemService(){
-        this.webServiceURL = 'callout:External_System_API';
         this.accountSelector = new AccountSelector();
         this.contactSelector = new ContactSelector();
+        this.externalSystemCalloutService = new ExternalSystemCalloutService();
     }
 
     public void registerAttendees(List<Case> newCaseList){
@@ -26,17 +26,9 @@ public with sharing class ExternalSystemService {
 
         for (Account a : this.accountSelector.selectByIds(accountIds)) {
             for (Contact c : this.contactSelector.selectByAccountId((Id) a.Id)) {
-                HttpRequest request = new HttpRequest();
-                request.setEndpoint(this.webServiceURL);
-                request.setMethod('POST');
-                request.setHeader('Content-Type', 'application/json;charset=UTF-8');
-                // Set the body as a JSON object
-                request.setBody('{"name":"'+ c.Name + '-' + c.Email  +'"}');
-                HttpResponse response = new Http().send(request);
-                // Parse the JSON response
+                HttpResponse response = this.externalSystemCalloutService.getResponse(c);
                 if (response.getStatusCode() != 201) {
-                    // TODO : use the LOGGER
-                    System.debug('The status code returned was not expected: ' +
+                    Log.error('The status code returned was not expected: ',
                             response.getStatusCode() + ' ' + response.getStatus());
                 } else {
                     // Everything went as expected.

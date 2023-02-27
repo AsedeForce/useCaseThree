@@ -95,6 +95,7 @@
         <members>AccountSelectorTest</members>
         <members>ContactSelectorTest</members>
         <members>MailServiceTest</members>
+        <members>ExternalSystemCalloutService</members>
         <name>ApexClass</name>
     </types>
     <types>

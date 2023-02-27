@@ -231,6 +231,7 @@ public class CaseTriggerTest {
             for (Database.SaveResult result : results ) {
                 System.assert(result.isSuccess());
             }
+            System.assertEquals(1, Limits.getEmailInvocations());
 
         }
     

@@ -28,12 +28,13 @@ public with sharing class ExternalSystemServiceTest {
         // Associate the mock with a test class
         Test.setMock(HttpCalloutMock.class, mock);
 
-        // Create an instance of ExternalSystemService and call registerAttendees()
-        ExternalSystemService service = new ExternalSystemService();
+        // Create an instance of ExternalSystemServiceCallout and call getResponse()
+        ExternalSystemCalloutService service = new ExternalSystemCalloutService();
         Test.startTest();
-        service.registerAttendees(testCaseList);
-        System.assertEquals(1, Limits.getEmailInvocations());
+        HttpResponse response = service.getResponse(contact);
         Test.stopTest();
+
+        System.assertEquals(201, response.getStatusCode());
 
     }
 
