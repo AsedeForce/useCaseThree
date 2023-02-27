@@ -2,16 +2,16 @@
  * Created by asedegui on 21/2/2023.
  */
 
-public class CaseTriggerHandler extends TriggerHandler{
-    private final Map<Id, Case> newCaseMap;
+public class CaseTriggerHandler extends TriggerHandler {
+    private final List<Case> newCaseList;
 
     public CaseTriggerHandler(){
-        this.newCaseMap = (Map<Id, Case>) Trigger.newMap;
+        this.newCaseList = (List<Case>) Trigger.new ;
     }
     public override void beforeInsert() {
-        CaseTriggerHelper.beforeInsertWork(this.newCaseMap);
+        CaseTriggerHelper.beforeInsertWork(this.newCaseList);
     }
     public override void afterUpdate() {
-        CaseTriggerHelper.afterUpdateWork(this.newCaseMap);
+        CaseTriggerHelper.afterUpdateWork(this.newCaseList);
     }
 }

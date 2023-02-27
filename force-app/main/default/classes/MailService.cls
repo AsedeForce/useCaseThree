@@ -14,6 +14,6 @@ public class MailService {
             emails.add(email);
         }
 
-        Messaging.sendEmail(emails);
+        List<Messaging.SendEmailResult> sd = Messaging.sendEmail(emails);
     }
 }

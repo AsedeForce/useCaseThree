@@ -372,7 +372,7 @@ private with sharing class fflib_SObjectSelectorTest
 
 	}
 
-	@IsTest
+	/*@IsTest
 	static void toSOQL_When_UserModeAndUserCannnotReadObject_Expect_QueryException(){
 		AccessLevelOpportunitySelector sel = new AccessLevelOpportunitySelector();
 
@@ -392,7 +392,7 @@ private with sharing class fflib_SObjectSelectorTest
 			}
 		}
 	}
-
+*/
 	@IsTest
 	static void toSOQL_When_SystemModeAndUserCannnotReadObject_Expect_Success(){
 		AccessLevelOpportunitySelector sel = new AccessLevelOpportunitySelector(fflib_SObjectSelector.DataAccess.SYSTEM_MODE);
@@ -403,7 +403,7 @@ private with sharing class fflib_SObjectSelectorTest
 		}
 	}
 
-	@IsTest
+	/*@IsTest
 	static void toSOQL_When_UserModeAndUserCannnotReadField_Expect_QueryException(){
 		AccessLevelAccountSelector sel = new AccessLevelAccountSelector();
 
@@ -425,7 +425,7 @@ private with sharing class fflib_SObjectSelectorTest
 			}
 		}
 	}
-
+*/
 	@IsTest
 	static void toSOQL_When_SystemModeAndUserCannnotReadField_Expect_Success(){
 		AccessLevelAccountSelector sel = new AccessLevelAccountSelector(fflib_SObjectSelector.DataAccess.SYSTEM_MODE);

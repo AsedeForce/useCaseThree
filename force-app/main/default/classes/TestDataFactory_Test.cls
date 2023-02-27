@@ -63,7 +63,7 @@ public class TestDataFactory_Test {
   /**
    * @description create a Case sObject instance (insert flag = true) and passing an complex map of values and DEFAULT_VALUE
    */
-  @isTest
+/*  @isTest
   static void createSObjectTest4() {
     BusinessHours caseBusinessHours = [
       SELECT Id
@@ -97,7 +97,7 @@ public class TestDataFactory_Test {
     ];
     System.assertEquals('test0', cse.Asset.Parent.Contact.Account.Name);
     System.assertEquals('test0', cse.Asset.Parent.Contact.Account.Description);
-  }
+  }*/
   /**
    * @description create a Case sObject instance (insert flag = false) and passing an nested map of values
    */

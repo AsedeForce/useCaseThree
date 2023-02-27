@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>EventBookingTest</members>
+        <members>CaseTriggerTest</members>
         <members>ExternalSystemService</members>
         <members>TriggerHandler</members>
         <members>TriggerHandler_Test</members>
@@ -86,11 +86,18 @@
         <members>AccountSelector</members>
         <members>ContactSelector</members>
         <members>MailService</members>
+        <members>ExternalSystemController</members>
+        <members>MailServiceController</members>
+        <members>ExternalSystemServiceQueueable</members>
+        <members>ExternalSystemCalloutMock</members>
+        <members>ExternalSystemServiceTest</members>
+        <members>CaseSelectorTest</members>
+        <members>AccountSelectorTest</members>
+        <members>ContactSelectorTest</members>
+        <members>MailServiceTest</members>
         <name>ApexClass</name>
     </types>
     <types>
-        <members>CaseBeforeInsertTrigger</members>
-        <members>CaseBeforeUpdateTrigger</members>
         <members>CaseTrigger</members>
         <name>ApexTrigger</name>
     </types>

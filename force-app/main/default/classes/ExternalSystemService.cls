@@ -6,37 +6,32 @@ public with sharing class ExternalSystemService {
 
 
     public ExternalSystemService(){
-
         this.webServiceURL = 'callout:External_System_API';
         this.accountSelector = new AccountSelector();
         this.contactSelector = new ContactSelector();
-
     }
 
-    public Map<Id, Contact> registerAttendees(Map<Id, Case> newMapCases){
+    public void registerAttendees(List<Case> newCaseList){
 
         // Populated with Contacts that are being mailed
         Map<Id, Contact> contactsToSendMailTo = new Map<Id, Contact>();
 
         Set<Id> accountIds = new Set<Id>();
-        for (Case c : newMapCases.values()) {
+        for (Case c : newCaseList) {
             // Check if an account has been linked to the case
             if (c.AccountId != null) {
                 accountIds.add(c.AccountId);
             }
         }
 
-
-        List<Account> accounts = this.accountSelector.selectByIds(accountIds);
-        for (Account a : accounts) {
-            List<Contact> contacts = this.contactSelector.selectByAccountId((Id) a.Id);
-            for (Contact c : contacts) {
+        for (Account a : this.accountSelector.selectByIds(accountIds)) {
+            for (Contact c : this.contactSelector.selectByAccountId((Id) a.Id)) {
                 HttpRequest request = new HttpRequest();
                 request.setEndpoint(this.webServiceURL);
                 request.setMethod('POST');
                 request.setHeader('Content-Type', 'application/json;charset=UTF-8');
                 // Set the body as a JSON object
-                request.setBody('{"name":"'+ c.name + '-' + c.email  +'"}');
+                request.setBody('{"name":"'+ c.Name + '-' + c.Email  +'"}');
                 HttpResponse response = new Http().send(request);
                 // Parse the JSON response
                 if (response.getStatusCode() != 201) {
@@ -51,6 +46,12 @@ public with sharing class ExternalSystemService {
             }
         }
 
-        return contactsToSendMailTo;
+        if (contactsToSendMailTo.values().size() > 0) {
+            // Sending Mails trough the mailServiceController
+            String subject = 'Reservation status CLOSED';
+            String body = 'Your reservation status has been changed to CLOSED';
+            MailServiceController.sendEmails(contactsToSendMailTo, subject, body);
+        }
+
     }
 }

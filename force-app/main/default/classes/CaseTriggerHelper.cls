@@ -3,15 +3,19 @@
  */
 
 public with sharing class CaseTriggerHelper {
-    public static void beforeInsertWork(Map<Id, Case> newMapCases){
+    public static void beforeInsertWork(List<Case> newCaseList){
         // Initializing contactSelector
         ContactSelector contactSelector = new ContactSelector();
 
+        System.debug(Trigger.new);
+
         Set<Id> accountIds = new Set<Id>();
-        for (Case c : newMapCases.values()) {
+        for (Case c : (List<Case>) newCaseList) {
             // Check if an account has been linked to the case
             if (c.AccountId != null) {
                 accountIds.add(c.AccountId);
+            } else {
+                c.addError('You cannot create a request without attaching an account');
             }
         }
 
@@ -22,11 +26,11 @@ public with sharing class CaseTriggerHelper {
         }
 
         // Validate the number of contacts for each case
-        for (Case c : newMapCases.values()) {
+        for (Case c : newCaseList) {
             if (c.AccountId != null) {
                 Integer numContacts = accountContactCounts.get(c.AccountId);
                 if (numContacts == null || numContacts == 0) {
-                    c.addError('The attendee linked to this case does not have any companies.');
+                    c.addError('You cannot create a request for accounts without contacts');
                 } else if (c.Origin == 'Web' && numContacts > 1) {
                     c.addError('Requests coming from the web should not exceed a single attendee.');
                 } else if (c.Origin == 'Phone' && numContacts > 3) {
@@ -37,18 +41,22 @@ public with sharing class CaseTriggerHelper {
 
     }
 
-    public static void afterUpdateWork(Map<Id, Case> newMapCases){
+    public static void afterUpdateWork(List<Case> newCaseList){
+        System.debug(newCaseList);
+        for (Case c : newCaseList){
+            if ( c.Status == 'Closed' ){
+                // Populated with Contacts that are being mailed
+                Map<Id, Contact> contactsToSendMailTo = new Map<Id, Contact>();
 
-        // Populated with Contacts that are being mailed
-        Map<Id, Contact> contactsToSendMailTo = new Map<Id, Contact>();
+                // Sending message trough external system QUEUE
+                ExternalSystemServiceQueueable queueable = new ExternalSystemServiceQueueable(newCaseList);
+                System.enqueueJob(queueable);
+            }
 
-        ExternalSystemService service = new ExternalSystemService();
-        contactsToSendMailTo = service.registerAttendees(newMapCases);
+        }
 
-        // Sending Mails trough the mailService
-        String subject = 'Reservation status CLOSED';
-        String body = 'Your reservation status has been changed to CLOSED';
-        MailService.sendEmails(contactsToSendMailTo, subject, body);
+
+
 
     }
 }
