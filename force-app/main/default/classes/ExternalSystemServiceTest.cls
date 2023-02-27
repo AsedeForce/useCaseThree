@@ -5,7 +5,8 @@
 @IsTest
 public with sharing class ExternalSystemServiceTest {
 
-    @IsTest static void testCallout() {
+    @IsTest
+    static void testCallout() {
         // Create mock data
         Account testAccount = (Account) TestDataFactory.createSObject(
                 'Account', new Map<String,Object>{
@@ -31,6 +32,7 @@ public with sharing class ExternalSystemServiceTest {
         ExternalSystemService service = new ExternalSystemService();
         Test.startTest();
         service.registerAttendees(testCaseList);
+        System.assertEquals(1, Limits.getEmailInvocations());
         Test.stopTest();
 
     }

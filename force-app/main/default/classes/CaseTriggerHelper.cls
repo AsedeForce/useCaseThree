@@ -45,12 +45,11 @@ public with sharing class CaseTriggerHelper {
         System.debug(newCaseList);
         for (Case c : newCaseList){
             if ( c.Status == 'Closed' ){
-                // Populated with Contacts that are being mailed
-                Map<Id, Contact> contactsToSendMailTo = new Map<Id, Contact>();
 
                 // Sending message trough external system QUEUE
                 ExternalSystemServiceQueueable queueable = new ExternalSystemServiceQueueable(newCaseList);
                 System.enqueueJob(queueable);
+
             }
 
         }
