@@ -13,24 +13,24 @@ public with sharing class ContactSelector extends fflib_SObjectSelector{
                 Contact.Id,
                 Contact.Name,
                 Contact.Email,
-                Contact.LastName
+                Contact.LastName,
+                Contact.AccountId
         };
-    }
-
-    public List<Contact> selectParentAccountName(){
-        return Database.query(
-                newQueryFactory()
-                        .selectField('Account.Name')
-                        .selectField('LastName')
-                        .setLimit(1)
-                        .toSOQL()
-        );
     }
 
     public List<Contact> selectByAccountId(Id identifier) {
         return Database.query(
                 newQueryFactory()
                         .setCondition('AccountId = :identifier')
+                        .selectFields(getSObjectFieldList()).toSOQL()
+
+        );
+    }
+
+    public List<Contact> selectByAccountIds(Set<Id> identifiers) {
+        return Database.query(
+                newQueryFactory()
+                        .setCondition('AccountId IN :identifiers')
                         .selectFields(getSObjectFieldList()).toSOQL()
 
         );
@@ -45,6 +45,15 @@ public with sharing class ContactSelector extends fflib_SObjectSelector{
                 new List<String>{ getSObjectName() }
         );
         return (List<AggregateResult>) Database.query(query);
+    }
+
+    public List<Contact> selectByName(String name) {
+        return Database.query(
+                newQueryFactory()
+                        .setCondition('Name = :name')
+                        .selectFields(getSObjectFieldList()).toSOQL()
+
+        );
     }
 
 

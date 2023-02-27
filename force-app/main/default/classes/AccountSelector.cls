@@ -17,11 +17,27 @@ public with sharing class AccountSelector extends fflib_SObjectSelector{
         return Account.SObjectType;
     }
 
-    public List<Account> selectByIds(Set<ID> idSet) {
+    public List<Account> selectByIds(Set<Id> idSet) {
         return (List<Account>) selectSObjectsById(idSet);
     }
 
-    //public List<Account> selectLimitOne()
+    public List<Account> selectByName(String name) {
+        return Database.query(
+                newQueryFactory()
+                        .setCondition('Name = :name')
+                        .selectFields(getSObjectFieldList()).toSOQL()
+
+        );
+    }
+    public List<Account> selectAccounts() {
+        String query = String.format(
+                'SELECT {0} FROM {1}',
+                new List<String>{ getFieldListString(), getSObjectName() }
+        );
+        return (List<Account>) Database.query(query);
+    }
+
+
 
 
 

@@ -18,18 +18,18 @@ public with sharing class CaseSelector extends fflib_SObjectSelector{
         return Case.SObjectType;
     }
 
-    public List<Case> selectById(Set<ID> idSet) {
+    public List<Case> selectById(Set<Id> idSet) {
         return (List<Case>) selectSObjectsById(idSet);
     }
 
-    public List<Case> selectLimit() {
-        String query = String.format(
-                'SELECT Asset.Parent.Contact.Account.Name, ' +
-                        'Asset.Parent.Contact.Account.Description FROM {1} ' +
-                        'LIMIT 1',
-                new List<String>{ getSObjectName() }
+
+    public List<Case> selectByOrigin(String origin) {
+        return Database.query(
+                newQueryFactory()
+                        .setCondition('Origin = :origin')
+                        .selectFields(getSObjectFieldList()).toSOQL()
+
         );
-        return Database.query(query);
     }
 
 
