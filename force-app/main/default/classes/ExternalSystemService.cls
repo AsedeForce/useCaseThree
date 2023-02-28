@@ -42,8 +42,8 @@ public with sharing class ExternalSystemService {
 
         if (contactsToSendMailTo.values().size() > 0) {
             // Sending Mails trough the mailServiceController
-            String subject = 'Reservation status CLOSED';
-            String body = 'Your reservation status has been changed to CLOSED';
+            String subject = GlobalConstants.SUBJECT;
+            String body = GlobalConstants.BODY;
             MailServiceController.sendEmails(contactsToSendMailTo, subject, body);
         }
 

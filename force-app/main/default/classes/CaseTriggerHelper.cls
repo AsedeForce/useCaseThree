@@ -7,8 +7,6 @@ public with sharing class CaseTriggerHelper {
         // Initializing contactSelector
         ContactSelector contactSelector = new ContactSelector();
 
-        System.debug(Trigger.new);
-
         Set<Id> accountIds = new Set<Id>();
         for (Case c : (List<Case>) newCaseList) {
             // Check if an account has been linked to the case
@@ -42,7 +40,6 @@ public with sharing class CaseTriggerHelper {
     }
 
     public static void afterUpdateWork(List<Case> newCaseList){
-        System.debug(newCaseList);
         for (Case c : newCaseList){
             if ( c.Status == 'Closed' ){
 

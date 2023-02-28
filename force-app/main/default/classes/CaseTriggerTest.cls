@@ -1,9 +1,9 @@
 @IsTest
-public class CaseTriggerTest {
+private class CaseTriggerTest {
 
 
         @TestSetup
-        public static void testSetup(){
+        static void testSetup(){
 
             Account account = (Account) TestDataFactory.createSObject(
                     'Account', new Map<String,Object>{
@@ -44,7 +44,7 @@ public class CaseTriggerTest {
 
 
         @IsTest
-        public static void refuseCaseCreationWhenAnAccountIsNotAttachedToACase(){
+        static void refuseCaseCreationWhenAnAccountIsNotAttachedToACase(){
             // Given
             List<Case> cases = new List<Case>();
             for (Integer i = 0; i < 200; i++){
@@ -61,12 +61,12 @@ public class CaseTriggerTest {
             for (Database.SaveResult result : results ) {
                 System.assert(!result.isSuccess());
                 System.assertEquals('You cannot create a request without attaching an account',
-                        result.getErrors()[0].getMessage());
+                        result.getErrors()[0].getMessage(), 'You cannot create a request without attaching an account');
             }
         }
         
         @IsTest
-        public static void refuseCaseCreationWhenNoContactIsAttachedToAnAccount(){
+        static void refuseCaseCreationWhenNoContactIsAttachedToAnAccount(){
 
             // Given
             AccountSelector accountSelector = new AccountSelector();
@@ -88,12 +88,12 @@ public class CaseTriggerTest {
             for (Database.SaveResult result : results ) {
                 System.assert(!result.isSuccess());
                 System.assertEquals('You cannot create a request for accounts without contacts',
-                        result.getErrors()[0].getMessage());
+                        result.getErrors()[0].getMessage(), 'You cannot create a request for accounts without contacts');
             }
         }
         
         @IsTest
-        public static void bookEventFromPhone(){
+        static void bookEventFromPhone(){
             // Given
             AccountSelector accountSelector = new AccountSelector();
             Account a1 = accountSelector.selectByName('Salesforce')[0];
@@ -120,19 +120,20 @@ public class CaseTriggerTest {
 
 
         @IsTest
-        public static void refuseEventBookingWhenNumberOfAttendeesIsMoreThanThreeForPhoneCases(){
+        static void refuseEventBookingWhenNumberOfAttendeesIsMoreThanThreeForPhoneCases(){
             // Given
 
             AccountSelector accountSelector = new AccountSelector();
             Account a1 = accountSelector.selectByName('Salesforce')[0];
 
-            Contact c4 = new Contact(LastName = 'Contact 4', AccountId = a1.ID);
+            Contact c4 = new Contact(LastName = 'Contact 4', AccountId = a1.Id);
             insert c4;
 
             // Given
             List<Case> cases = new List<Case>();
             for (Integer i = 0; i < 200; i++){
-                Case request = new Case(Origin = 'Phone',Subject = 'Event Booking', Description = 'Book Spots for Company A1 & their 4 employees', AccountId = a1.Id);
+                Case request = new Case(Origin = 'Phone',Subject = 'Event Booking',
+                        Description = 'Book Spots for Company A1 & their 4 employees', AccountId = a1.Id);
                 cases.add(request);
             }
             // When 
@@ -146,13 +147,14 @@ public class CaseTriggerTest {
                 System.assert(!result.isSuccess());
                 System.assert(result.getErrors().size() > 0);
                 System.assertEquals('Requests coming from the phone should not exceed three attendees.',
-                        result.getErrors()[0].getMessage());
+                        result.getErrors()[0].getMessage(),
+                        'Requests coming from the phone should not exceed three attendees.');
             }
 
         }
         
         @IsTest
-        public static void bookEventFromTheWeb(){
+        static void bookEventFromTheWeb(){
             // Given
             AccountSelector accountSelector = new AccountSelector();
             Account a1 = accountSelector.selectByName('SF1')[0];
@@ -160,7 +162,8 @@ public class CaseTriggerTest {
             // Given
             List<Case> cases = new List<Case>();
             for (Integer i = 0; i < 200; i++){
-                Case request = new Case(Origin = 'Web',Subject = 'Event Booking', Description = 'Book One Spot for Company A1', AccountId = a1.Id);
+                Case request = new Case(Origin = 'Web',Subject = 'Event Booking',
+                        Description = 'Book One Spot for Company A1', AccountId = a1.Id);
                 cases.add(request);
             }
 
@@ -173,13 +176,11 @@ public class CaseTriggerTest {
             for (Database.SaveResult result : results ) {
                 System.assert(result.isSuccess());
             }
-
-
                 
         } 
             
         @IsTest
-        public static void refuseEventBookingWhenNumberOfAttendeesIsMoreThanOneForWebCases(){
+        static void refuseEventBookingWhenNumberOfAttendeesIsMoreThanOneForWebCases(){
             // Given
             AccountSelector accountSelector = new AccountSelector();
             Account a1 = accountSelector.selectByName('Salesforce')[0];
@@ -187,7 +188,8 @@ public class CaseTriggerTest {
             // Given
             List<Case> cases = new List<Case>();
             for (Integer i = 0; i < 200; i++){
-                Case request = new Case(Origin = 'Web',Subject = 'Event Booking', Description = 'Book Spots for Company A1 & their 3 employees', AccountId = a1.ID);
+                Case request = new Case(Origin = 'Web',Subject = 'Event Booking',
+                        Description = 'Book Spots for Company A1 & their 3 employees', AccountId = a1.Id);
                 cases.add(request);
             }
 
@@ -201,12 +203,12 @@ public class CaseTriggerTest {
                 System.assert(!result.isSuccess());
                 System.assert(result.getErrors().size() > 0);
                 System.assertEquals('Requests coming from the web should not exceed a single attendee.',
-                        result.getErrors()[0].getMessage());
+                        result.getErrors()[0].getMessage(), 'Requests coming from the web should not exceed a single attendee.');
             }
         }
     
         @IsTest
-        public static void updateEventCasesToCloseStatusEmailSentTrigger(){
+        static void updateEventCasesToCloseStatusEmailSentTrigger(){
 
             // Given
             CaseSelector caseSelector = new CaseSelector();
@@ -233,11 +235,11 @@ public class CaseTriggerTest {
             }
 
             List<EmailMessage> sentEmails = [SELECT Id FROM EmailMessage WHERE Subject = 'Reservation status CLOSED'];
-            System.assertEquals(9, sentEmails.size());
+            System.assertEquals(9, sentEmails.size(), 'Should send 9 Emails');
         }
 
         @IsTest
-        public static void updateEventCasesToOtherStatusEmailSentTrigger(){
+        static void updateEventCasesToOtherStatusEmailSentTrigger(){
 
         // Given
         CaseSelector caseSelector = new CaseSelector();
@@ -265,11 +267,11 @@ public class CaseTriggerTest {
         List<EmailMessage> sentEmails = [SELECT Id FROM EmailMessage WHERE Subject = 'Reservation status CLOSED'];
 
         // no Email was sent
-        System.assertEquals(0, sentEmails.size());
+        System.assertEquals(0, sentEmails.size(), 'No Emails should be sent.');
     }
 
     @IsTest
-    public static void updateEventCasesErrorEmailsNotSent(){
+    static void updateEventCasesErrorEmailsNotSent(){
 
         // Given
         CaseSelector caseSelector = new CaseSelector();
@@ -297,7 +299,7 @@ public class CaseTriggerTest {
         List<EmailMessage> sentEmails = [SELECT Id FROM EmailMessage WHERE Subject = 'Reservation status CLOSED'];
 
         // no Email was sent
-        System.assertEquals(0, sentEmails.size());
+        System.assertEquals(0, sentEmails.size(), 'No Emails should be sent.');
     }
 
 }

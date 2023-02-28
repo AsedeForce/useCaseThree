@@ -40,7 +40,7 @@ private class ContactSelectorTest {
 
         List<Contact> results = selector.selectByAccountId(testAccount.Id);
 
-        System.assertEquals(3, results.size());
+        System.assertEquals(3, results.size(), 'Should equal 3');
         for (Contact c : results) {
             System.assertEquals(testAccount.Id, c.AccountId);
         }
@@ -58,7 +58,7 @@ private class ContactSelectorTest {
 
         List<Contact> results = selector.selectByAccountIds(accountIds);
 
-        System.assertEquals(4, results.size());
+        System.assertEquals(4, results.size(), 'Should be of size 4');
         for (Contact c : results) {
             System.assert(accountIds.contains(c.AccountId));
         }
@@ -75,11 +75,11 @@ private class ContactSelectorTest {
 
         List<AggregateResult> results = selector.selectNumberOfContactsByAccountIds(accountIds);
 
-        System.assertEquals(2, results.size());
+        System.assertEquals(2, results.size(), 'Should be of size 2');
         System.assert(accountIds.contains((Id) results[0].get('AccountId')));
-        System.assertEquals(3, (Integer) results[0].get('numberOfContacts'));
+        System.assertEquals(3, (Integer) results[0].get('numberOfContacts'), 'Should be 3');
         System.assert(accountIds.contains((Id) results[1].get('AccountId')));
-        System.assertEquals(1, (Integer) results[1].get('numberOfContacts'));
+        System.assertEquals(1, (Integer) results[1].get('numberOfContacts'), 'Should be 1');
 
     }
 
@@ -89,7 +89,7 @@ private class ContactSelectorTest {
 
         List<Contact> results = selector.selectByName('Contact 1');
 
-        System.assertEquals(1, results.size());
-        System.assertEquals('Contact 1', results[0].LastName);
+        System.assertEquals(1, results.size(), 'size should be one');
+        System.assertEquals('Contact 1', results[0].LastName, 'Should equal Contact 1');
     }
 }

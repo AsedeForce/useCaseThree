@@ -15,10 +15,10 @@ private class AccountSelectorTest {
         AccountSelector selector = new AccountSelector();
         List<Schema.SObjectField> fields = selector.getSObjectFieldList();
 
-        System.assertEquals(Account.Id, fields[0]);
-        System.assertEquals(Account.Description, fields[1]);
-        System.assertEquals(Account.Name, fields[2]);
-        System.assertEquals(Account.OwnerId, fields[3]);
+        System.assertEquals(Account.Id, fields[0], 'Should be Id field');
+        System.assertEquals(Account.Description, fields[1], 'Should be Description field');
+        System.assertEquals(Account.Name, fields[2], 'Should be Name field');
+        System.assertEquals(Account.OwnerId, fields[3], 'Should be OwnerId field');
     }
 
     @IsTest
@@ -35,8 +35,8 @@ private class AccountSelectorTest {
         Set<Id> idSet = new Set<Id>{testAccount.Id};
         List<Account> accounts = selector.selectByIds(idSet);
 
-        System.assertEquals(1, accounts.size());
-        System.assertEquals(testAccount.Id, accounts[0].Id);
+        System.assertEquals(1, accounts.size(), 'Account size should be 1');
+        System.assertEquals(testAccount.Id, accounts[0].Id, 'Account Id should be the same');
     }
 
     @IsTest
@@ -45,8 +45,8 @@ private class AccountSelectorTest {
         List<Account> accounts2 = [ SELECT Id, Name FROM Account WHERE Name = 'Test Account' ];
         List<Account> accounts = selector.selectByName('Test Account');
 
-        System.assertEquals(1, accounts.size());
-        System.assertEquals(accounts2[0].Id, accounts[0].Id);
-        System.assertEquals(accounts2[0].Name, accounts[0].Name);
+        System.assertEquals(1, accounts.size(), 'Accounts size Should be 1');
+        System.assertEquals(accounts2[0].Id, accounts[0].Id, 'Account Id Should be the same');
+        System.assertEquals(accounts2[0].Name, accounts[0].Name, 'Account Name should be the same');
     }
 }

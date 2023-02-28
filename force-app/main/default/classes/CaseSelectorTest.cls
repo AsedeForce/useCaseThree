@@ -27,17 +27,17 @@ private class CaseSelectorTest {
         CaseSelector selector = new CaseSelector();
         List<Schema.SObjectField> fields = selector.getSObjectFieldList();
 
-        System.assertEquals(Case.Id, fields[0]);
-        System.assertEquals(Case.Origin, fields[1]);
-        System.assertEquals(Case.Subject, fields[2]);
-        System.assertEquals(Case.Description, fields[3]);
-        System.assertEquals(Case.AccountId, fields[4]);
+        System.assertEquals(Case.Id, fields[0], 'Should find Id field');
+        System.assertEquals(Case.Origin, fields[1], 'Should find Origin field');
+        System.assertEquals(Case.Subject, fields[2], 'Should find Subject field');
+        System.assertEquals(Case.Description, fields[3], 'Should find Description field');
+        System.assertEquals(Case.AccountId, fields[4], 'Should find AccountId field');
     }
 
     @IsTest
     static void testGetSObjectType() {
         CaseSelector selector = new CaseSelector();
-        System.assertEquals(Case.SObjectType, selector.getSObjectType());
+        System.assertEquals(Case.SObjectType, selector.getSObjectType(), 'Should be of Case Type');
     }
 
     @IsTest
@@ -52,8 +52,8 @@ private class CaseSelectorTest {
         Set<Id> idSet = new Set<Id>{testCase.Id};
         List<Case> cases = selector.selectById(idSet);
 
-        System.assertEquals(1, cases.size());
-        System.assertEquals(testCase.Id, cases[0].Id);
+        System.assertEquals(1, cases.size(), 'Should find one case');
+        System.assertEquals(testCase.Id, cases[0].Id, 'Should have same Id');
     }
 
     @IsTest
@@ -62,7 +62,7 @@ private class CaseSelectorTest {
         List<Case> cases = selector.selectByOrigin('Web');
 
         for (Case c : cases) {
-            System.assertEquals('Web', c.Origin);
+            System.assertEquals('Web', c.Origin, 'Should be of Web Origin');
         }
     }
 }
