@@ -96,6 +96,7 @@
         <members>ContactSelectorTest</members>
         <members>MailServiceTest</members>
         <members>ExternalSystemCalloutService</members>
+        <members>GlobalConstants</members>
         <name>ApexClass</name>
     </types>
     <types>
