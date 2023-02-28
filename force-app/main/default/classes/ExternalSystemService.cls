@@ -27,9 +27,11 @@ public with sharing class ExternalSystemService {
         for (Account a : this.accountSelector.selectByIds(accountIds)) {
             for (Contact c : this.contactSelector.selectByAccountId((Id) a.Id)) {
                 HttpResponse response = this.externalSystemCalloutService.getResponse(c);
+                // Parse the JSON response
                 if (response.getStatusCode() != 201) {
-                    Log.error('The status code returned was not expected: ',
+                    System.debug('The status code returned was not expected: ' +
                             response.getStatusCode() + ' ' + response.getStatus());
+
                 } else {
                     // Everything went as expected.
                     contactsToSendMailTo.put(c.Id, c);

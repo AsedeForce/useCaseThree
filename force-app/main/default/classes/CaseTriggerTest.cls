@@ -206,12 +206,12 @@ public class CaseTriggerTest {
         }
     
         @IsTest
-        public static void updateCasesTriggerTest(){
+        public static void updateEventCasesToCloseStatusEmailSentTrigger(){
 
             // Given
             CaseSelector caseSelector = new CaseSelector();
             List<Case> cases = caseSelector.selectByOrigin('Phone');
-            ExternalSystemCalloutMock mock = new ExternalSystemCalloutMock();
+            ExternalSystemCalloutMock mock = new ExternalSystemCalloutMock(201);
 
             // updating status to closed
             for (Case c : cases ) {
@@ -231,9 +231,73 @@ public class CaseTriggerTest {
             for (Database.SaveResult result : results ) {
                 System.assert(result.isSuccess());
             }
-            System.assertEquals(1, Limits.getEmailInvocations());
 
+            List<EmailMessage> sentEmails = [SELECT Id FROM EmailMessage WHERE Subject = 'Reservation status CLOSED'];
+            System.assertEquals(9, sentEmails.size());
         }
-    
-    
+
+        @IsTest
+        public static void updateEventCasesToOtherStatusEmailSentTrigger(){
+
+        // Given
+        CaseSelector caseSelector = new CaseSelector();
+        List<Case> cases = caseSelector.selectByOrigin('Phone');
+        ExternalSystemCalloutMock mock = new ExternalSystemCalloutMock(201);
+
+        // updating status to closed
+        for (Case c : cases ) {
+            c.Status = 'Open';
+        }
+
+        // Associate the mock with the test class
+        Test.setMock(HttpCalloutMock.class, mock);
+
+        // When
+        Test.startTest();
+        List<Database.SaveResult> results = Database.update(cases, true);
+        Test.stopTest();
+
+        // Then
+        cases = caseSelector.selectByOrigin('Phone');
+        for (Database.SaveResult result : results ) {
+            System.assert(result.isSuccess());
+        }
+        List<EmailMessage> sentEmails = [SELECT Id FROM EmailMessage WHERE Subject = 'Reservation status CLOSED'];
+
+        // no Email was sent
+        System.assertEquals(0, sentEmails.size());
+    }
+
+    @IsTest
+    public static void updateEventCasesErrorEmailsNotSent(){
+
+        // Given
+        CaseSelector caseSelector = new CaseSelector();
+        List<Case> cases = caseSelector.selectByOrigin('Phone');
+        ExternalSystemCalloutMock mock = new ExternalSystemCalloutMock(400);
+
+        // updating status to closed
+        for (Case c : cases ) {
+            c.Status = 'Closed';
+        }
+
+        // Associate the mock with the test class
+        Test.setMock(HttpCalloutMock.class, mock);
+
+        // When
+        Test.startTest();
+        List<Database.SaveResult> results = Database.update(cases, true);
+        Test.stopTest();
+
+        // Then
+        cases = caseSelector.selectByOrigin('Phone');
+        for (Database.SaveResult result : results ) {
+            System.assert(result.isSuccess());
+        }
+        List<EmailMessage> sentEmails = [SELECT Id FROM EmailMessage WHERE Subject = 'Reservation status CLOSED'];
+
+        // no Email was sent
+        System.assertEquals(0, sentEmails.size());
+    }
+
 }
